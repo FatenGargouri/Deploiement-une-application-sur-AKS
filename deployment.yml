@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-node-server-service
+spec:
+  selector:
+    app: app-node-server
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-node-server-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app-node-server
+  template:
+    metadata:
+      labels:
+        app: app-node-server
+    spec:
+      containers:
+      - name: app-node-server
+        image: faten23/app-node-server:latest
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-react-client-service
+spec:
+  selector:
+    app: app-react-client
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-react-client-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app-react-client
+  template:
+    metadata:
+      labels:
+        app: app-react-client
+    spec:
+      containers:
+      - name: app-react-client
+        image: faten23/app-react-client:latest
+        ports:
+        - containerPort: 3000
